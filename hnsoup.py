@@ -2,13 +2,19 @@ from bs4 import BeautifulSoup
 import requests
 import sys
 import time
+import argparse
+
+parser = argparse.ArgumentParser(description='HN for your face in terminal.')
+parser.add_argument('--type', type=str, default='comments', help='type of content `posts` or `comments` (default)')
+
+args = parser.parse_args()
 
 seen = {}
 
 
 def pull_feed():
     global seen
-    url = requests.get('https://hnrss.org/newcomments')
+    url = requests.get('https://hnrss.org/newcomments' if args.type == 'comments' else 'https://hnrss.org/newest')
 
     soup = BeautifulSoup(url.content, 'xml')
     entries = soup.find_all('item')
