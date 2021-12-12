@@ -43,8 +43,8 @@ def pull_feed():
 
         time.sleep(2)
 
-    # print('\033[30m__EOS__')
-    time.sleep(33)
+    print('\033[30m__EOS__')
+    time.sleep(59)
 
 
 try:
