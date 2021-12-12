@@ -20,13 +20,16 @@ def pull_feed():
     entries = soup.find_all('item')
 
     for i in entries:
-        desc = BeautifulSoup(i.description.text, 'lxml').text
-        if desc in seen:
-            continue
-
-        seen[desc] = 1
-
         title = i.title.text
+        desc = BeautifulSoup(i.description.text, 'lxml').text
+
+        if title in seen or desc in seen:
+            continue
+        if args.type == 'comments':
+            seen[desc] = 1
+        else:
+            seen[title] = 1
+
         link = i.guid.text
         blob = f'\033[31m{title}\n\033[93m{desc}\033[30m\n{link}\033[0m\n'
 
