@@ -11,6 +11,6 @@ pipenv shell
 python hnsoup --type posts     # for new posts, default is comments
 ```
 
-![hnsoup](./hnsoup.png)
+![hnsoup](./screenshot.png)
 
 MIT license
