@@ -11,10 +11,11 @@ args = parser.parse_args()
 
 seen = {}
 
+comments = args.type == 'comments'
 
 def pull_feed():
     global seen
-    url = requests.get('https://hnrss.org/newcomments' if args.type == 'comments' else 'https://hnrss.org/newest')
+    url = requests.get('https://hnrss.org/newcomments' if comments else 'https://hnrss.org/newest')
 
     soup = BeautifulSoup(url.content, 'xml')
     entries = soup.find_all('item')
@@ -31,7 +32,7 @@ def pull_feed():
             seen[title] = 1
 
         link = i.guid.text
-        blob = f'\033[31m{title}\n\033[93m{desc}\033[30m\n{link}\033[0m\n'
+        blob = f'\n\033[31m{title}\n\033[93m{desc}\033[30m\n{link}\033[0m'
 
         for line in blob.splitlines():
             for w in line.split():
@@ -39,12 +40,12 @@ def pull_feed():
                 sys.stdout.flush()
                 time.sleep(0.03)
             print('')
-        print('')
 
         time.sleep(2)
 
-    print('\033[30m__EOS__')
-    time.sleep(59)
+    sys.stdout.write('\033[30m~ ')
+    sys.stdout.flush()
+    time.sleep(35 if comments else 60)
 
 
 try:
