@@ -5,17 +5,26 @@ import time
 import argparse
 
 parser = argparse.ArgumentParser(description='HN for your face in terminal.')
-parser.add_argument('--type', type=str, default='comments', help='type of content `posts` or `comments` (default)')
+parser.add_argument(
+    '--type',
+    type=str,
+    default='home',
+    help='type of content `home` or `newposts` or `comments` (default)')
 
 args = parser.parse_args()
 
 seen = {}
 
 comments = args.type == 'comments'
+home = args.type == 'home'
+newposts = args.type == 'newposts'
+
 
 def pull_feed():
     global seen
-    url = requests.get('https://hnrss.org/newcomments' if comments else 'https://hnrss.org/newest')
+    url = requests.get('https://hnrss.org/newcomments'
+                       if comments else 'https://hnrss.org/newest?points=3' if
+                       newposts else 'https://hnrss.org/frontpage?points=50')
 
     soup = BeautifulSoup(url.content, 'xml')
     entries = soup.find_all('item')
@@ -32,7 +41,7 @@ def pull_feed():
             seen[title] = 1
 
         link = i.guid.text
-        blob = f'\n\033[31m{title}\n\033[93m{desc}\033[30m\n{link}\033[0m'
+        blob = f'\n\033[93m{title}\n\033[31m{desc}\033[30m{link}\033[0m'
 
         for line in blob.splitlines():
             for w in line.split():
