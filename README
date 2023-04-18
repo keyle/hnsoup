@@ -1,2 +1,2 @@
 pipenv install
-pipenv run python hnsoup
+pipenv run python hnsoup.py
